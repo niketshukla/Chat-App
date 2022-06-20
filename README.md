@@ -11,5 +11,5 @@ The easiest way to start is to clone the repository.
 # clone the repository
 
 ```
-git clone https://github.com/moni-tu/Chat-App.git
+git clone git@github.com:niketshukla/Chat-App.git
 ```
