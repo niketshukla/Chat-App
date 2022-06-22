@@ -40,27 +40,51 @@ export default class Start extends React.Component {
           <Text style={styles.chooseBackground}>Choose Background Color:</Text>
           <View style={styles.colorSelect}>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="red background"
+              accessibilityHint="Allows you to add a red background to the chat"
+              accessibilityRole="button"
               style={[styles.circle, styles.red]}
               onPress={() => this.changeBgColor(this.colors.red)}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="green background"
+              accessibilityHint="Allows you to add a green background to the chat"
+              accessibilityRole="button"
               style={[styles.circle, styles.green]}
               onPress={() => this.changeBgColor(this.colors.green)}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="yellow background"
+              accessibilityHint="Allows you to add a yellow background to the chat"
+              accessibilityRole="button"
               style={[styles.circle, styles.yellow]}
               onPress={() => this.changeBgColor(this.colors.yellow)}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="gray background"
+              accessibilityHint="Allows you to add a gray background to the chat"
+              accessibilityRole="button"
               style={[styles.circle, styles.gray]}
               onPress={() => this.changeBgColor(this.colors.gray)}
             ></TouchableOpacity>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="blue background"
+              accessibilityHint="Allows you to add a blue background to the chat"
+              accessibilityRole="button"
               style={[styles.circle, styles.blue]}
               onPress={() => this.changeBgColor(this.colors.blue)}
             ></TouchableOpacity>
           </View>
           <Pressable
+              accessible={true}
+              accessibilityLabel="Go to the chat page"
+              accessibilityHint="Allows you to go to the chat page"
+              accessibilityRole="button"
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
