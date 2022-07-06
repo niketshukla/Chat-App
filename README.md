@@ -46,7 +46,7 @@ To build a chat app for mobile devices using React Native. The app will provide 
 - Initialize project:
 ```expo init "Chat-app"```
 
-# Launch via emulator (Android Studio (Windows) or XCode (iOS)), or a mobile phone
+## Launch via emulator (Android Studio (Windows) or XCode (iOS)), or a mobile phone
 
 - Launch:
 ```npm start``` or ```expo start```
