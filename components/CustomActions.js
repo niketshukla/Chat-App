@@ -6,16 +6,20 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
-
-import firebase from 'firebase';
-require('firebase/firestore');
+import { Camera } from 'expo-camera';
+import "firebase/firestore";
+import firebase from "firebase";
 
 export default class CustomActions extends React.Component {
+  state = {
+    image: null,
+    location: null
+  
+  }
   //---Let user pick photo from phone library---
-
   imagePicker = async () => {
     // expo permission
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     try {
       if (status === "granted") {
         // pick image
@@ -36,10 +40,7 @@ export default class CustomActions extends React.Component {
   //---Let user take photo with camera---
 
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(
-      Permissions.CAMERA,
-      Permissions.CAMERA_ROLL
-    );
+    const { status } = await Camera.requestCameraPermissionsAsync();
     try {
       if (status === "granted") {
         const result = await ImagePicker.launchCameraAsync({
@@ -60,13 +61,13 @@ export default class CustomActions extends React.Component {
 
   getLocation = async () => {
     try {
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status === "granted") {
         const result = await Location.getCurrentPositionAsync(
           {}
         ).catch((error) => console.log(error));
         const longitude = JSON.stringify(result.coords.longitude);
-        const altitude = JSON.stringify(result.coords.latitude);
+        const latitude = JSON.stringify(result.coords.latitude);
         if (result) {
           this.props.onSend({
             location: {
@@ -112,12 +113,13 @@ export default class CustomActions extends React.Component {
   //---function that handles communication features---
   onActionPress = () => {
     const options = [
-      'Choose From Library',
+      'Choose Image From Library',
       'Take Picture',
       'Send Location',
       'Cancel',
     ];
     const cancelButtonIndex = options.length - 1;
+    console.log(this.context);
     this.context.actionSheet().showActionSheetWithOptions(
       {
         options,
@@ -145,7 +147,7 @@ export default class CustomActions extends React.Component {
       accessible={true}
       accessibilityLabel="More options"
       accessibilityHint="Let’s you choose to send an image or your geolocation."
-      style={[styles.container]}
+      style={styles.container}
       onPress={this.onActionPress}
       >
         <View style={[styles.wrapper, this.props.wrapperStyle]}>

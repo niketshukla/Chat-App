@@ -33,6 +33,8 @@ export default class Chat extends React.Component {
       },
       loggedInText: 'Just a moment, logging in...',
       isConnected: false,
+      image: null,
+      location: null
     }
     /*Integrate configuration info into chat.js file to allow app to connect to Firestore.*/
     if (!firebase.apps.length) {
@@ -67,6 +69,7 @@ export default class Chat extends React.Component {
     this.props.navigation.setOptions({ title: name });
     // Reference to load messages via Firebase
     this.referenceChatMessages = firebase.firestore().collection("messages");
+    this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
 
     // load messages from asyncStorage
     this.getMessages();
@@ -91,10 +94,6 @@ export default class Chat extends React.Component {
               avatar: 'https://placeimg.com/140/140/any',
             },
           });
-
-          // create reference to active user's messages
-          // this.referenceMessagesUser = firebase.firestore().collection('messages').where('uid', '==', this.state.uid);
-          this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
         });
       } else {
         console.log('offline');
@@ -104,6 +103,20 @@ export default class Chat extends React.Component {
     });
   }
   
+  // Add new messages to the firebase messages collection
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceChatMessages.add({
+      uid: this.state.uid,
+      _id: message._id,
+      text: message.text || '',
+      createdAt: message.createdAt,
+      user: message.user,
+      image: message.image || null,
+      location: message.location || null
+    });
+  }
+
   //function to save messages in the asyncStorage
   async saveMessagesOffline() {
     try {
@@ -144,7 +157,13 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user,
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar
+        },
+        image: data.image || null,
+        location: data.location || null
       });
     });
     this.setState({
@@ -159,18 +178,6 @@ export default class Chat extends React.Component {
     }),() => {
       this.addMessage();
       this.saveMessagesOffline();
-    });
-  }
-
-  // Add new messages to the firebase messages collection
-  addMessage() {
-    const message = this.state.messages[0];
-    this.referenceChatMessages.add({
-      // uid: this.state.uid,
-      _id: message._id,
-      text: message.text,
-      createdAt: message.createdAt,
-      user: message.user,
     });
   }
 
@@ -230,7 +237,8 @@ export default class Chat extends React.Component {
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
-          renderActions={this.renderCustomActions}
+          renderActions={this.renderCustomActions.bind(this)}
+          renderCustomView={this.renderCustomView}
           user={{
             _id: this.state.user._id,
             name: this.state.user.name,
