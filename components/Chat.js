@@ -186,8 +186,11 @@ export default class Chat extends React.Component {
       <Bubble
         {...props}
         wrapperStyle={{
+          left: {
+            backgroundColor: 'white',
+          },
           right: {
-            backgroundColor: '#63ace5'
+            backgroundColor: '#ECEFF1'
           }
         }}
       />
